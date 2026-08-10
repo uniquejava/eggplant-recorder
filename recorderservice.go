@@ -15,10 +15,11 @@ import (
 )
 
 type RecordingOptions struct {
-	SourceID    string `json:"sourceId"`
-	SourceKind  string `json:"sourceKind"`
-	SystemAudio bool   `json:"systemAudio"`
-	Microphone  bool   `json:"microphone"`
+	SourceID            string `json:"sourceId"`
+	SourceKind          string `json:"sourceKind"`
+	SystemAudio         bool   `json:"systemAudio"`
+	Microphone          bool   `json:"microphone"`
+	MicrophoneDeviceID  string `json:"microphoneDeviceId"`
 }
 
 type Clip struct {
@@ -93,6 +94,14 @@ func (r *RecorderService) OpenScreenCaptureSettings() bool {
 
 func (r *RecorderService) ListSources() ([]capture.Source, error) {
 	return capture.ListSources()
+}
+
+func (r *RecorderService) ListMicrophones() ([]capture.MicDevice, error) {
+	return capture.ListMicrophones()
+}
+
+func (r *RecorderService) RequestMicrophoneAccess() bool {
+	return capture.RequestMicrophoneAccess()
 }
 
 func (r *RecorderService) GetSourceThumbnail(sourceID, sourceKind string) string {
@@ -201,7 +210,7 @@ func (r *RecorderService) StartRecording(opts RecordingOptions) error {
 	filename := fmt.Sprintf("rec-%d.mp4", time.Now().UnixNano())
 	out := filepath.Join(r.mediaDir, filename)
 
-	err := capture.Start(opts.SourceID, opts.SourceKind, out, opts.SystemAudio, opts.Microphone, os.Getpid())
+	err := capture.Start(opts.SourceID, opts.SourceKind, out, opts.SystemAudio, opts.Microphone, opts.MicrophoneDeviceID, os.Getpid())
 	if err != nil {
 		app := application.Get()
 		if app != nil {

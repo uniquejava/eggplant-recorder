@@ -23,6 +23,7 @@ export interface RecordingOptions {
     "sourceKind": string;
     "systemAudio": boolean;
     "microphone": boolean;
+    "microphoneDeviceId": string;
 }
 
 /**

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Events } from '@wailsio/runtime'
 import { RecorderService } from '../bindings/github.com/cyper/video-editor-wails'
-import type { Source } from '../bindings/github.com/cyper/video-editor-wails/internal/capture/models'
+import type { MicDevice, Source } from '../bindings/github.com/cyper/video-editor-wails/internal/capture/models'
 import type { Clip } from '../bindings/github.com/cyper/video-editor-wails/models'
 
 type View = 'select' | 'recording' | 'editor'
@@ -31,6 +31,8 @@ function App() {
   const [selectedId, setSelectedId] = useState<string>('')
   const [systemAudio, setSystemAudio] = useState(true)
   const [microphone, setMicrophone] = useState(false)
+  const [mics, setMics] = useState<MicDevice[]>([])
+  const [micDeviceId, setMicDeviceId] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [needsScreenAccess, setNeedsScreenAccess] = useState(false)
@@ -71,6 +73,20 @@ function App() {
     setCurrentTime(0)
     setPaused(false)
     setElapsed(0)
+  }, [])
+
+  const refreshMics = useCallback(async () => {
+    try {
+      const list = (await RecorderService.ListMicrophones()) || []
+      setMics(list)
+      setMicDeviceId((prev) => {
+        if (prev && list.some((m) => m.id === prev)) return prev
+        const def = list.find((m) => m.default)
+        return def?.id || list[0]?.id || ''
+      })
+    } catch {
+      // listing can fail before mic permission; keep empty
+    }
   }, [])
 
   const refreshSources = useCallback(async (opts?: { requestAccess?: boolean }) => {
@@ -173,6 +189,7 @@ function App() {
 
   useEffect(() => {
     refreshSources()
+    void refreshMics()
     const offFinished = Events.On('recording:finished', (ev: any) => {
       applyFinished(ev?.data || {})
     })
@@ -196,7 +213,7 @@ function App() {
       offFailed?.()
       offStatus?.()
     }
-  }, [refreshSources, applyFinished])
+  }, [refreshSources, refreshMics, applyFinished])
 
   useEffect(() => {
     if (view === 'editor' && clips.length && !clips.find((c) => c.id === selectedClipId)) {
@@ -208,11 +225,20 @@ function App() {
     if (!selected) return
     setError('')
     try {
+      if (microphone) {
+        const ok = await RecorderService.RequestMicrophoneAccess()
+        if (!ok) {
+          setError('Microphone permission denied. Enable it in System Settings → Privacy & Security → Microphone.')
+          return
+        }
+        await refreshMics()
+      }
       await RecorderService.StartRecording({
         sourceId: selected.id,
         sourceKind: selected.kind,
         systemAudio,
         microphone,
+        microphoneDeviceId: microphone ? micDeviceId : '',
       })
       setElapsed(0)
       setPaused(false)
@@ -423,9 +449,35 @@ function App() {
                 System audio
               </label>
               <label>
-                <input type="checkbox" checked={microphone} onChange={(e) => setMicrophone(e.target.checked)} />
+                <input
+                  type="checkbox"
+                  checked={microphone}
+                  onChange={(e) => {
+                    const on = e.target.checked
+                    setMicrophone(on)
+                    if (on) void refreshMics()
+                  }}
+                />
                 Microphone
               </label>
+              {microphone && (
+                <label className="mic-select-label">
+                  Input
+                  <select
+                    className="mic-select"
+                    value={micDeviceId}
+                    onChange={(e) => setMicDeviceId(e.target.value)}
+                    onFocus={() => void refreshMics()}
+                  >
+                    {mics.length === 0 && <option value="">Default microphone</option>}
+                    {mics.map((m) => (
+                      <option key={m.id} value={m.id}>
+                        {m.name}{m.default ? ' (default)' : ''}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
             </div>
             <button className="btn btn-danger" disabled={!selected || loading} onClick={startRecording}>
               Record

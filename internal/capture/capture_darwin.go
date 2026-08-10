@@ -25,6 +25,12 @@ type Source struct {
 	Thumbnail string `json:"thumbnail"` // raw base64 PNG without data-uri prefix
 }
 
+type MicDevice struct {
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	Default bool   `json:"default"`
+}
+
 func ListSources() ([]Source, error) {
 	list := C.CaptureListSources()
 	defer C.CaptureFreeSources(list)
@@ -53,12 +59,38 @@ func ListSources() ([]Source, error) {
 	return out, nil
 }
 
+func ListMicrophones() ([]MicDevice, error) {
+	list := C.CaptureListMicrophones()
+	defer C.CaptureFreeMics(list)
+	if list.error != nil {
+		return nil, errors.New(C.GoString(list.error))
+	}
+	count := int(list.count)
+	out := make([]MicDevice, 0, count)
+	if count == 0 || list.items == nil {
+		return out, nil
+	}
+	items := unsafe.Slice(list.items, count)
+	for _, item := range items {
+		out = append(out, MicDevice{
+			ID:      C.GoString(item.id),
+			Name:    C.GoString(item.name),
+			Default: item.is_default != 0,
+		})
+	}
+	return out, nil
+}
+
 func HasScreenAccess() bool {
 	return C.CaptureHasScreenAccess() == 1
 }
 
 func RequestAccess() bool {
 	return C.CaptureRequestAccess() == 1
+}
+
+func RequestMicrophoneAccess() bool {
+	return C.CaptureRequestMicrophoneAccess() == 1
 }
 
 func OpenScreenCaptureSettings() bool {
@@ -78,15 +110,17 @@ func SourceThumbnail(sourceID, sourceKind string) string {
 	return C.GoString(cthumb)
 }
 
-func Start(sourceID, sourceKind, outputPath string, systemAudio, microphone bool, excludePID int) error {
+func Start(sourceID, sourceKind, outputPath string, systemAudio, microphone bool, microphoneDeviceID string, excludePID int) error {
 	cid := C.CString(sourceID)
 	ckind := C.CString(sourceKind)
 	cpath := C.CString(outputPath)
+	cmic := C.CString(microphoneDeviceID)
 	defer C.free(unsafe.Pointer(cid))
 	defer C.free(unsafe.Pointer(ckind))
 	defer C.free(unsafe.Pointer(cpath))
+	defer C.free(unsafe.Pointer(cmic))
 
-	res := C.CaptureStart(cid, ckind, cpath, C.bool(systemAudio), C.bool(microphone), C.int(excludePID))
+	res := C.CaptureStart(cid, ckind, cpath, C.bool(systemAudio), C.bool(microphone), cmic, C.int(excludePID))
 	defer C.CaptureFreeResult(res)
 	if !bool(res.ok) {
 		if res.error != nil {

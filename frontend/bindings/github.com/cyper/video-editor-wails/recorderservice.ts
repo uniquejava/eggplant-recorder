@@ -41,6 +41,10 @@ export function IsRecording(): $CancellablePromise<boolean> {
     return $Call.ByID(871398354);
 }
 
+export function ListMicrophones(): $CancellablePromise<capture$0.MicDevice[] | null> {
+    return $Call.ByID(17939888);
+}
+
 export function ListSources(): $CancellablePromise<capture$0.Source[] | null> {
     return $Call.ByID(577334471);
 }
@@ -63,6 +67,10 @@ export function PauseRecording(): $CancellablePromise<void> {
  */
 export function Relaunch(): $CancellablePromise<void> {
     return $Call.ByID(2409219045);
+}
+
+export function RequestMicrophoneAccess(): $CancellablePromise<boolean> {
+    return $Call.ByID(2883267798);
 }
 
 export function RequestScreenAccess(): $CancellablePromise<boolean> {

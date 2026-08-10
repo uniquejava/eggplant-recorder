@@ -24,13 +24,14 @@ Bundle ID: `com.cyper.videoeditorwails`
 
 ```
 main.go / tray.go / recorderservice.go   # app, tray, Go service
-internal/capture/                        # ObjC bridge (darwin) + stub
+internal/capture/                        # ObjC modules by feature (see docs/04)
 frontend/src/App.tsx                     # select → recording → editor
 frontend/bindings/                       # generated; commit OK, rebuild regenerates
 build/darwin/Info*.plist                 # LSMinimumSystemVersion 15.0 + privacy strings
 docs/                                    # from-zero tutorial series
 ```
 
+`internal/capture` ObjC split (darwin): `capture_perm` / `capture_mic` / `capture_sources` / `capture_recorder` + `capture_util` + `capture_darwin.h` C API.
 ## Commands
 
 ```bash
@@ -41,6 +42,20 @@ open bin/video-editor-wails.app
 ```
 
 CLI: `go install github.com/wailsapp/wails/v3/cmd/wails3@v3.0.0-beta.6`
+
+## Network / proxy (China)
+
+Local HTTP/HTTPS proxy is usually on **`127.0.0.1:7897`** (Clash / similar). When fetching docs, GitHub, Apple, npm, or searching the web from this machine, set:
+
+```bash
+export http_proxy=http://127.0.0.1:7897
+export https_proxy=http://127.0.0.1:7897
+export HTTP_PROXY=http://127.0.0.1:7897
+export HTTPS_PROXY=http://127.0.0.1:7897
+export ALL_PROXY=http://127.0.0.1:7897
+```
+
+Agents should prefer this proxy for outbound lookups so requests are not blocked by the GFW. If `7897` is down, try `7890` once, then report the failure.
 
 ## Hard rules / pitfalls
 
@@ -57,10 +72,12 @@ CLI: `go install github.com/wailsapp/wails/v3/cmd/wails3@v3.0.0-beta.6`
 
 ## Product behaviour to preserve
 
-- Source picker: screens + windows, System audio / Microphone toggles, Record
+- Source picker: screens + windows, System audio / Microphone toggles, **microphone input device select**, Record
 - Recording: elapsed clock, Pause / Resume / Stop; tray label `● m:ss` / `⏸ m:ss`
 - Editor: preview, timeline split/delete, New recording, Export MP4 (native save dialog)
 - When recording a display, exclude this app’s windows (`excludePID = os.Getpid()`)
+- System audio + mic are **separate MP4 audio tracks** (do not mux both into one `AVAssetWriterInput`)
+- Mic capture uses `SCStreamConfiguration.microphoneCaptureDeviceID`; request Microphone TCC before start
 
 ## Git
 

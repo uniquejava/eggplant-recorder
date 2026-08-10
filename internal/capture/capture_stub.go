@@ -13,17 +13,28 @@ type Source struct {
 	Thumbnail string `json:"thumbnail"`
 }
 
+type MicDevice struct {
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	Default bool   `json:"default"`
+}
+
 func ListSources() ([]Source, error) {
+	return nil, errors.New("screen capture is only supported on macOS 15+")
+}
+
+func ListMicrophones() ([]MicDevice, error) {
 	return nil, errors.New("screen capture is only supported on macOS 15+")
 }
 
 func HasScreenAccess() bool            { return false }
 func RequestAccess() bool              { return false }
+func RequestMicrophoneAccess() bool    { return false }
 func OpenScreenCaptureSettings() bool  { return false }
 
 func SourceThumbnail(sourceID, sourceKind string) string { return "" }
 
-func Start(sourceID, sourceKind, outputPath string, systemAudio, microphone bool, excludePID int) error {
+func Start(sourceID, sourceKind, outputPath string, systemAudio, microphone bool, microphoneDeviceID string, excludePID int) error {
 	return errors.New("screen capture is only supported on macOS 15+")
 }
 

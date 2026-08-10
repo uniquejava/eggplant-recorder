@@ -10,11 +10,18 @@
 
 ```
 internal/capture/
-├── capture_darwin.h    # 纯 C API，给 Go 和 .m 共用
-├── capture_darwin.m    # ScreenCaptureKit + AVAssetWriter
-├── capture_darwin.go   # //go:build darwin + cgo
-└── capture_stub.go     # //go:build !darwin
+├── capture_darwin.h      # 纯 C API（Go/cgo 契约）
+├── capture_internal.h    # ObjC 共用：框架 import、CaptureCStrdup、锁
+├── capture_util.m        # strdup / 全局锁 / FreeResult
+├── capture_perm.m        # 屏幕录制 TCC
+├── capture_mic.m         # 麦克风权限 + 输入设备列表
+├── capture_sources.m     # 显示器/窗口枚举、过滤、缩略图
+├── capture_recorder.m    # VERecorder + Start/Stop/Pause（SCStream 写盘）
+├── capture_darwin.go     # //go:build darwin + cgo
+└── capture_stub.go       # //go:build !darwin
 ```
+
+按功能拆 `.m`：CGo 会编译同目录下所有 `.m`。新增能力时优先新文件（或扩对应模块），不要再堆回单文件。
 
 为什么先暴露 C API？CGo 最稳的契约是 **C 类型**；ObjC 对象留在 `.m` 里，Go 只看到 `char*` / `int` / `bool`。
 
@@ -44,7 +51,7 @@ import "C"
 
 `excludePID` 传 `os.Getpid()`，录整屏时排除本应用窗口（演示里“应用本身不会进成片”）。
 
-## ObjC 侧核心思路（`capture_darwin.m`）
+## ObjC 侧核心思路（`capture_recorder.m` / `capture_sources.m`）
 
 1. **`SCShareableContent`** — 拿 displays / windows  
 2. **`SCContentFilter`** — `initWithDisplay:excludingWindows:` 或 `initWithDesktopIndependentWindow:`  

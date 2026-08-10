@@ -29,9 +29,25 @@ typedef struct {
     char *error;
 } CaptureResultC;
 
+typedef struct {
+    char *id;   // AVCaptureDevice.uniqueID
+    char *name;
+    int is_default;
+} CaptureMicDeviceC;
+
+typedef struct {
+    CaptureMicDeviceC *items;
+    int count;
+    char *error;
+} CaptureMicListC;
+
 // Caller must free with CaptureFreeSources.
 CaptureSourceListC CaptureListSources(void);
 void CaptureFreeSources(CaptureSourceListC list);
+
+// Microphone inputs. Caller must free with CaptureFreeMics.
+CaptureMicListC CaptureListMicrophones(void);
+void CaptureFreeMics(CaptureMicListC list);
 
 // Single-source PNG thumbnail (base64). Caller frees with free().
 char *CaptureSourceThumbnail(const char *source_id, const char *source_kind);
@@ -43,16 +59,21 @@ int CaptureHasScreenAccess(void);
 // (may open System Settings once) and returns 1 only if granted.
 int CaptureRequestAccess(void);
 
+// Returns 1 if microphone permission is granted (prompts once if undetermined).
+int CaptureRequestMicrophoneAccess(void);
+
 // Opens System Settings → Privacy → Screen Recording. Returns 1 on success.
 int CaptureOpenScreenCaptureSettings(void);
 
 // Starts recording. exclude_pid: process id to exclude from capture (0 = none).
+// microphone_device_id: AVCaptureDevice.uniqueID, or NULL/"" for system default.
 CaptureResultC CaptureStart(
     const char *source_id,
     const char *source_kind,
     const char *output_path,
     bool system_audio,
     bool microphone,
+    const char *microphone_device_id,
     int exclude_pid
 );
 
