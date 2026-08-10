@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MsixPackagingToolTemplate
+    xmlns="http://schemas.microsoft.com/msix/packaging/msixpackagingtool/template/2022">
+    <Settings
+        AllowTelemetry="false"
+        ApplyACLsToPackageFiles="true"
+        GenerateCommandLineFile="true"
+        AllowPromptForPassword="false">
+    </Settings>
+    <Installer
+        Path="video_editor_wails"
+        Arguments=""
+        InstallLocation="C:\Program Files\Cyper\Video Editor Wails">
+    </Installer>
+    <PackageInformation
+        PackageName="Video Editor Wails"
+        PackageDisplayName="Video Editor Wails"
+        PublisherName="CN=Cyper"
+        PublisherDisplayName="Cyper"
+        Version="0.1.0.0"
+        PackageDescription="Screen recorder and video editor">
+        <Capabilities>
+            <Capability Name="runFullTrust" />
+            
+        </Capabilities>
+        <Applications>
+            <Application
+                Id="com.cyper.videoeditorwails"
+                Description="Screen recorder and video editor"
+                DisplayName="Video Editor Wails"
+                ExecutableName="video_editor_wails"
+                EntryPoint="Windows.FullTrustApplication">
+                
+            </Application>
+        </Applications>
+        <Resources>
+            <Resource Language="en-us" />
+        </Resources>
+        <Dependencies>
+            <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
+        </Dependencies>
+        <Properties>
+            <Framework>false</Framework>
+            <DisplayName>Video Editor Wails</DisplayName>
+            <PublisherDisplayName>Cyper</PublisherDisplayName>
+            <Description>Screen recorder and video editor</Description>
+            <Logo>Assets\AppIcon.png</Logo>
+        </Properties>
+    </PackageInformation>
+    <SaveLocation PackagePath="video_editor_wails.msix" />
+    <PackageIntegrity>
+        <CertificatePath></CertificatePath>
+    </PackageIntegrity>
+</MsixPackagingToolTemplate>

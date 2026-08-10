@@ -1,0 +1,42 @@
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# Wails / Task
+.task/
+bin/
+*.app/
+!build/**/*.app/
+
+# Frontend
+frontend/dist/
+frontend/node_modules/
+frontend/.vite/
+
+# Go
+*.exe
+*.test
+*.out
+coverage.out
+
+# Local / secrets
+.env
+.env.*
+!.env.example
+
+# Mobile generated (per-machine; overlays hold absolute paths)
+build/linux/appimage/build/
+build/windows/nsis/MicrosoftEdgeWebview2Setup.exe
+build/ios/xcode/overlay.json
+build/ios/xcode/gen/
+build/android/overlay.json
+build/android/gen/
+
+# Capture / export leftovers
+*.mp4
+!docs/**/*.mp4
+tmp/
+/tmp/
