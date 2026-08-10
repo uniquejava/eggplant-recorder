@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cyper/video-editor-wails/internal/capture"
+	"github.com/uniquejava/video-editor-wails/internal/capture"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 

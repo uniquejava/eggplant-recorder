@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cyper/video-editor-wails/internal/capture"
+	"github.com/uniquejava/video-editor-wails/internal/capture"
 )
 
 func main() {

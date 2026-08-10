@@ -1,4 +1,4 @@
-module github.com/cyper/video-editor-wails
+module github.com/uniquejava/video-editor-wails
 
 go 1.25.0
 

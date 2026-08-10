@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Events } from '@wailsio/runtime'
-import { RecorderService } from '../bindings/github.com/cyper/video-editor-wails'
-import type { MicDevice, Source } from '../bindings/github.com/cyper/video-editor-wails/internal/capture/models'
-import type { Clip } from '../bindings/github.com/cyper/video-editor-wails/models'
+import { RecorderService } from '../bindings/github.com/uniquejava/video-editor-wails'
+import type { MicDevice, Source } from '../bindings/github.com/uniquejava/video-editor-wails/internal/capture/models'
+import type { Clip } from '../bindings/github.com/uniquejava/video-editor-wails/models'
 
 type View = 'select' | 'recording' | 'editor'
 

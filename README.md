@@ -2,7 +2,7 @@
 
 macOS 15+ screen recorder and light video editor, built with **Wails v3** (React + TypeScript frontend, Go + ScreenCaptureKit backend).
 
-Inspired by the [Better Stack Wails demo](https://www.youtube.com/watch?v=Q1TL2AKoy00).
+![screenshot](./docs/screenshot.png)
 
 ## Tutorial
 

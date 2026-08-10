@@ -15,7 +15,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/cyper/video-editor-wails/internal/capture"
+	"github.com/uniquejava/video-editor-wails/internal/capture"
 )
 
 func runCase(name, sourceID, sourceKind, dir string, systemAudio, mic bool) {

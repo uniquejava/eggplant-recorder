@@ -77,8 +77,8 @@ wails3 generate bindings -ts -i ./...
 前端引用：
 
 ```ts
-import { RecorderService } from '../bindings/github.com/cyper/video-editor-wails'
-import type { Source } from '../bindings/github.com/cyper/video-editor-wails/internal/capture/models'
+import { RecorderService } from '../bindings/github.com/uniquejava/video-editor-wails'
+import type { Source } from '../bindings/github.com/uniquejava/video-editor-wails/internal/capture/models'
 ```
 
 ## `StartRecording` 流程

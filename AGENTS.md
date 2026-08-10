@@ -4,7 +4,7 @@
 
 macOS **15+** screen recorder + light timeline editor, built with **Wails v3** (`v3.0.0-beta.6`).
 
-Inspired by [Better Stack’s Wails demo](https://www.youtube.com/watch?v=Q1TL2AKoy00): pick screen/window → record → preview/trim → Export MP4.
+Flow: pick screen/window → record → preview/trim → Export MP4. Inspiration / demo link: see `README.md`.
 
 Step-by-step tutorial (Chinese): `docs/README.md`.
 
@@ -17,7 +17,7 @@ Step-by-step tutorial (Chinese): `docs/README.md`.
 | Export / probe | system `ffmpeg` / `ffprobe` |
 | Tray | Wails `SystemTray` (menu bar on macOS) |
 
-Module: `github.com/cyper/video-editor-wails`  
+Module: `github.com/uniquejava/video-editor-wails`  
 Bundle ID: `com.cyper.videoeditorwails`
 
 ## Layout

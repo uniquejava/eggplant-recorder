@@ -14,7 +14,7 @@
 wails3 init \
   -n "Video Editor Wails" \
   -t react \
-  -mod github.com/cyper/video-editor-wails \
+  -mod github.com/uniquejava/video-editor-wails \
   -d . \
   -productname "Video Editor Wails" \
   -productidentifier com.cyper.videoeditorwails
