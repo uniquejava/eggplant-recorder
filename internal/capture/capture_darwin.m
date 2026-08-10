@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <ScreenCaptureKit/ScreenCaptureKit.h>
 #import <AppKit/AppKit.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -20,8 +21,11 @@
 @property(nonatomic, strong) AVAssetWriterInput *audioInput;
 @property(nonatomic, strong) AVAssetWriterInputPixelBufferAdaptor *adaptor;
 @property(nonatomic, assign) BOOL writing;
+@property(nonatomic, assign) BOOL paused;
 @property(nonatomic, assign) BOOL sessionStarted;
-@property(nonatomic, assign) CMTime firstPTS;
+@property(nonatomic, assign) BOOL hasLastInputPTS;
+@property(nonatomic, assign) CMTime lastInputPTS;
+@property(nonatomic, assign) CMTime outputPTS;
 @property(nonatomic, strong) NSString *outputPath;
 @property(nonatomic, strong) dispatch_queue_t queue;
 @property(nonatomic, strong) NSError *lastError;
@@ -33,7 +37,8 @@
     self = [super init];
     if (self) {
         _queue = dispatch_queue_create("com.cyper.videoeditor.capture", DISPATCH_QUEUE_SERIAL);
-        _firstPTS = kCMTimeInvalid;
+        _lastInputPTS = kCMTimeInvalid;
+        _outputPTS = kCMTimeZero;
     }
     return self;
 }
@@ -47,8 +52,11 @@
                   error:(NSError **)outError {
     self.outputPath = outputPath;
     self.writing = NO;
+    self.paused = NO;
     self.sessionStarted = NO;
-    self.firstPTS = kCMTimeInvalid;
+    self.hasLastInputPTS = NO;
+    self.lastInputPTS = kCMTimeInvalid;
+    self.outputPTS = kCMTimeZero;
     self.lastError = nil;
 
     NSURL *url = [NSURL fileURLWithPath:outputPath];
@@ -186,6 +194,14 @@
     return self.outputPath;
 }
 
+- (void)pause {
+    self.paused = YES;
+}
+
+- (void)resume {
+    self.paused = NO;
+}
+
 - (void)stream:(SCStream *)stream didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer ofType:(SCStreamOutputType)type {
     if (!self.writing || sampleBuffer == NULL) {
         return;
@@ -195,20 +211,36 @@
     }
 
     CMTime pts = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+
+    // While paused, keep advancing the input clock but do not grow the output timeline.
+    if (self.paused) {
+        self.lastInputPTS = pts;
+        self.hasLastInputPTS = YES;
+        return;
+    }
+
     if (!self.sessionStarted) {
         if (type != SCStreamOutputTypeScreen) {
             return;
         }
-        self.firstPTS = pts;
         [self.writer startWriting];
         [self.writer startSessionAtSourceTime:kCMTimeZero];
         self.sessionStarted = YES;
+        self.outputPTS = kCMTimeZero;
+        self.lastInputPTS = pts;
+        self.hasLastInputPTS = YES;
+    } else if (self.hasLastInputPTS) {
+        CMTime delta = CMTimeSubtract(pts, self.lastInputPTS);
+        if (CMTimeCompare(delta, kCMTimeZero) > 0) {
+            self.outputPTS = CMTimeAdd(self.outputPTS, delta);
+        }
+        self.lastInputPTS = pts;
+    } else {
+        self.lastInputPTS = pts;
+        self.hasLastInputPTS = YES;
     }
 
-    CMTime relative = CMTimeSubtract(pts, self.firstPTS);
-    if (CMTimeCompare(relative, kCMTimeZero) < 0) {
-        return;
-    }
+    CMTime relative = self.outputPTS;
 
     if (type == SCStreamOutputTypeScreen) {
         if (!self.videoInput.isReadyForMoreMediaData) {
@@ -321,13 +353,47 @@ static NSImage *thumbnailForDisplay(SCDisplay *display) {
     return nil;
 }
 
+static NSImage *thumbnailForWindow(SCWindow *window) {
+    if (@available(macOS 14.0, *)) {
+        __block CGImageRef shot = NULL;
+        dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+        SCContentFilter *filter = [[SCContentFilter alloc] initWithDesktopIndependentWindow:window];
+        SCStreamConfiguration *c = [[SCStreamConfiguration alloc] init];
+        // Keep aspect roughly 16:10 for the picker cards.
+        CGFloat w = MAX(window.frame.size.width, 1);
+        CGFloat h = MAX(window.frame.size.height, 1);
+        CGFloat scale = MIN(320.0 / w, 200.0 / h);
+        c.width = (size_t)MAX(2, (size_t)(w * scale) & ~1);
+        c.height = (size_t)MAX(2, (size_t)(h * scale) & ~1);
+        c.showsCursor = NO;
+        [SCScreenshotManager captureImageWithFilter:filter
+                                      configuration:c
+                                  completionHandler:^(CGImageRef  _Nullable image, NSError * _Nullable error) {
+            if (image) {
+                shot = CGImageRetain(image);
+            }
+            dispatch_semaphore_signal(sem);
+        }];
+        dispatch_semaphore_wait(sem, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)));
+        if (shot) {
+            NSImage *img = [[NSImage alloc] initWithCGImage:shot size:NSZeroSize];
+            CGImageRelease(shot);
+            return img;
+        }
+    }
+    return nil;
+}
+
 CaptureSourceListC CaptureListSources(void) {
     CaptureSourceListC out = {0};
     dispatch_semaphore_t sem = dispatch_semaphore_create(0);
     __block SCShareableContent *content = nil;
     __block NSError *err = nil;
 
-    [SCShareableContent getShareableContentWithCompletionHandler:^(SCShareableContent * _Nullable shareableContent, NSError * _Nullable error) {
+    // Prefer the explicit API so we still get window titles when available.
+    [SCShareableContent getShareableContentExcludingDesktopWindows:NO
+                                               onScreenWindowsOnly:NO
+                                                 completionHandler:^(SCShareableContent * _Nullable shareableContent, NSError * _Nullable error) {
         content = shareableContent;
         err = error;
         dispatch_semaphore_signal(sem);
@@ -342,6 +408,7 @@ CaptureSourceListC CaptureListSources(void) {
     NSMutableArray<NSDictionary *> *rows = [NSMutableArray array];
     for (SCDisplay *display in content.displays) {
         NSString *name = [NSString stringWithFormat:@"Screen %dx%d", (int)display.width, (int)display.height];
+        // Display thumbs only — cheap enough and avoids blocking the window list.
         NSString *thumb = pngBase64FromImage(thumbnailForDisplay(display));
         [rows addObject:@{
             @"id": [NSString stringWithFormat:@"display:%u", (unsigned int)display.displayID],
@@ -354,7 +421,11 @@ CaptureSourceListC CaptureListSources(void) {
     }
 
     for (SCWindow *window in content.windows) {
-        if (window.frame.size.width < 64 || window.frame.size.height < 64) {
+        // Keep the old behaviour: show titled windows even when preview is empty/black.
+        // Only skip obviously invalid tiny layers.
+        CGFloat w = window.frame.size.width;
+        CGFloat h = window.frame.size.height;
+        if (w > 0 && h > 0 && (w < 32 || h < 32)) {
             continue;
         }
         NSString *title = window.title.length ? window.title : @"Window";
@@ -364,8 +435,9 @@ CaptureSourceListC CaptureListSources(void) {
             @"id": [NSString stringWithFormat:@"window:%u", (unsigned int)window.windowID],
             @"kind": @"window",
             @"name": name,
-            @"width": @((int)window.frame.size.width),
-            @"height": @((int)window.frame.size.height),
+            @"width": @((int)MAX(w, 0)),
+            @"height": @((int)MAX(h, 0)),
+            // Window previews are loaded asynchronously via CaptureSourceThumbnail.
             @"thumb": @"",
         }];
     }
@@ -384,6 +456,50 @@ CaptureSourceListC CaptureListSources(void) {
     return out;
 }
 
+char *CaptureSourceThumbnail(const char *source_id, const char *source_kind) {
+    if (!source_id || !source_kind) {
+        return strdup("");
+    }
+    NSString *sourceID = [NSString stringWithUTF8String:source_id];
+    NSString *kind = [NSString stringWithUTF8String:source_kind];
+
+    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
+    __block SCShareableContent *content = nil;
+    [SCShareableContent getShareableContentExcludingDesktopWindows:NO
+                                               onScreenWindowsOnly:NO
+                                                 completionHandler:^(SCShareableContent * _Nullable shareableContent, NSError * _Nullable error) {
+        content = shareableContent;
+        dispatch_semaphore_signal(sem);
+    }];
+    dispatch_semaphore_wait(sem, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)));
+    if (!content) {
+        return strdup("");
+    }
+
+    NSImage *image = nil;
+    if ([kind isEqualToString:@"screen"]) {
+        unsigned int displayID = 0;
+        sscanf(source_id, "display:%u", &displayID);
+        for (SCDisplay *d in content.displays) {
+            if (d.displayID == displayID) {
+                image = thumbnailForDisplay(d);
+                break;
+            }
+        }
+    } else {
+        unsigned int windowID = 0;
+        sscanf(source_id, "window:%u", &windowID);
+        for (SCWindow *w in content.windows) {
+            if (w.windowID == windowID) {
+                image = thumbnailForWindow(w);
+                break;
+            }
+        }
+    }
+    NSString *b64 = pngBase64FromImage(image);
+    return cstrdup(b64 ?: @"");
+}
+
 void CaptureFreeSources(CaptureSourceListC list) {
     if (list.error) {
         free(list.error);
@@ -400,16 +516,33 @@ void CaptureFreeSources(CaptureSourceListC list) {
     free(list.items);
 }
 
+int CaptureHasScreenAccess(void) {
+    return CGPreflightScreenCaptureAccess() ? 1 : 0;
+}
+
 int CaptureRequestAccess(void) {
-    // Trigger permission prompt by asking for shareable content.
-    dispatch_semaphore_t sem = dispatch_semaphore_create(0);
-    __block BOOL ok = NO;
-    [SCShareableContent getShareableContentWithCompletionHandler:^(SCShareableContent * _Nullable content, NSError * _Nullable error) {
-        ok = (content != nil && error == nil);
-        dispatch_semaphore_signal(sem);
-    }];
-    dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
-    return ok ? 1 : 0;
+    // Preflight never shows UI. Only request when not yet granted —
+    // CGRequestScreenCaptureAccess opens System Settings on macOS 15+
+    // when permission is missing, so calling it every launch feels like a spam popup.
+    if (CGPreflightScreenCaptureAccess()) {
+        return 1;
+    }
+    return CGRequestScreenCaptureAccess() ? 1 : 0;
+}
+
+int CaptureOpenScreenCaptureSettings(void) {
+    // Sequoia / Ventura Privacy & Security pane.
+    NSArray<NSString *> *candidates = @[
+        @"x-apple.systempreferences:com.apple.settings.PrivacySecurity.extension?Privacy_ScreenCapture",
+        @"x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture",
+    ];
+    for (NSString *s in candidates) {
+        NSURL *url = [NSURL URLWithString:s];
+        if (url && [[NSWorkspace sharedWorkspace] openURL:url]) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 CaptureResultC CaptureStart(
@@ -557,6 +690,38 @@ int CaptureIsRecording(void) {
     ensureLock();
     [gLock lock];
     int yes = (gRecorder != nil && gRecorder.writing) ? 1 : 0;
+    [gLock unlock];
+    return yes;
+}
+
+int CapturePause(void) {
+    ensureLock();
+    [gLock lock];
+    VERecorder *recorder = gRecorder;
+    [gLock unlock];
+    if (!recorder || !recorder.writing) {
+        return 0;
+    }
+    [recorder pause];
+    return 1;
+}
+
+int CaptureResume(void) {
+    ensureLock();
+    [gLock lock];
+    VERecorder *recorder = gRecorder;
+    [gLock unlock];
+    if (!recorder || !recorder.writing) {
+        return 0;
+    }
+    [recorder resume];
+    return 1;
+}
+
+int CaptureIsPaused(void) {
+    ensureLock();
+    [gLock lock];
+    int yes = (gRecorder != nil && gRecorder.writing && gRecorder.paused) ? 1 : 0;
     [gLock unlock];
     return yes;
 }

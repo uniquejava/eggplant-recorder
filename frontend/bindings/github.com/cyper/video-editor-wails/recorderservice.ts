@@ -21,6 +21,22 @@ export function GetClips(): $CancellablePromise<$models.Clip[] | null> {
     return $Call.ByID(2337220496);
 }
 
+export function GetSourceThumbnail(sourceID: string, sourceKind: string): $CancellablePromise<string> {
+    return $Call.ByID(3427878988, sourceID, sourceKind);
+}
+
+export function GetStatus(): $CancellablePromise<$models.RecordingStatusEvent> {
+    return $Call.ByID(3122448023);
+}
+
+export function HasScreenAccess(): $CancellablePromise<boolean> {
+    return $Call.ByID(3051092387);
+}
+
+export function IsPaused(): $CancellablePromise<boolean> {
+    return $Call.ByID(320073465);
+}
+
 export function IsRecording(): $CancellablePromise<boolean> {
     return $Call.ByID(871398354);
 }
@@ -33,12 +49,36 @@ export function MediaDir(): $CancellablePromise<string> {
     return $Call.ByID(3446629764);
 }
 
+export function OpenScreenCaptureSettings(): $CancellablePromise<boolean> {
+    return $Call.ByID(2651154470);
+}
+
+export function PauseRecording(): $CancellablePromise<void> {
+    return $Call.ByID(3656529558);
+}
+
+/**
+ * Relaunch quits this process and opens the same .app again.
+ * Needed after toggling Screen Recording — TCC is applied to new launches only.
+ */
+export function Relaunch(): $CancellablePromise<void> {
+    return $Call.ByID(2409219045);
+}
+
 export function RequestScreenAccess(): $CancellablePromise<boolean> {
     return $Call.ByID(4120925098);
 }
 
+export function ResumeRecording(): $CancellablePromise<void> {
+    return $Call.ByID(3290603539);
+}
+
 export function SetClips(clips: $models.Clip[] | null): $CancellablePromise<void> {
     return $Call.ByID(4151990852, clips);
+}
+
+export function ShowMainWindow(): $CancellablePromise<void> {
+    return $Call.ByID(466170303);
 }
 
 export function StartRecording(opts: $models.RecordingOptions): $CancellablePromise<void> {

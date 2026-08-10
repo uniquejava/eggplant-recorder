@@ -17,7 +17,11 @@ func ListSources() ([]Source, error) {
 	return nil, errors.New("screen capture is only supported on macOS 15+")
 }
 
-func RequestAccess() bool { return false }
+func HasScreenAccess() bool            { return false }
+func RequestAccess() bool              { return false }
+func OpenScreenCaptureSettings() bool  { return false }
+
+func SourceThumbnail(sourceID, sourceKind string) string { return "" }
 
 func Start(sourceID, sourceKind, outputPath string, systemAudio, microphone bool, excludePID int) error {
 	return errors.New("screen capture is only supported on macOS 15+")
@@ -28,3 +32,7 @@ func Stop() (string, error) {
 }
 
 func IsRecording() bool { return false }
+
+func Pause() error  { return errors.New("screen capture is only supported on macOS 15+") }
+func Resume() error { return errors.New("screen capture is only supported on macOS 15+") }
+func IsPaused() bool { return false }

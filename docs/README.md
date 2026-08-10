@@ -17,7 +17,7 @@
 |---|------|------|
 | 1 | [01-setup.md](./01-setup.md) | 环境与工具链 |
 | 2 | [02-scaffold.md](./02-scaffold.md) | `wails3 init` 脚手架 |
-| 3 | [03-macos-permissions.md](./03-macos-permissions.md) | Info.plist、权限、最低系统版本 |
+| 3 | [03-macos-permissions.md](./03-macos-permissions.md) | Info.plist、TCC、签名、重置权限命令 |
 | 4 | [04-screencapturekit.md](./04-screencapturekit.md) | ScreenCaptureKit CGo 桥 |
 | 5 | [05-recorder-service.md](./05-recorder-service.md) | Go Service、事件、媒体中间件 |
 | 6 | [06-frontend-ui.md](./06-frontend-ui.md) | 三态 UI：选源 / 录制中 / 剪辑 |
@@ -33,6 +33,7 @@ video-editor-wails/
 ├── internal/capture/       # ObjC ScreenCaptureKit 桥
 ├── frontend/               # React + Vite UI
 ├── build/darwin/           # Info.plist / 打包任务
+├── scripts/                # sign-app、setup-dev-codesign、权限探针
 └── docs/                   # 本教程
 ```
 

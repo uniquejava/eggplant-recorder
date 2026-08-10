@@ -14,9 +14,19 @@ wails3 task dev
 
 ```bash
 wails3 build          # 产出 bin/video-editor-wails
-wails3 package        # 产出 bin/video-editor-wails.app（adhoc 签名）
+wails3 package        # 产出 bin/video-editor-wails.app（优先 Apple Development，否则 adhoc）
 open bin/video-editor-wails.app
 ```
+
+打包签名细节、TCC 重置、为何 adhoc 会反复要权限：见 **[03 · macOS 权限、TCC 与代码签名](./03-macos-permissions.md)**。
+
+打包后建议确认：
+
+```bash
+codesign -dv --verbose=2 bin/video-editor-wails.app 2>&1 | grep -E 'Authority|TeamIdentifier|Signature'
+```
+
+应看到 `Apple Development: …` 和 `TeamIdentifier=…`，而不是 `Signature=adhoc`。
 
 ## Git 提交前注意
 
@@ -32,9 +42,18 @@ open bin/video-editor-wails.app
 
 ### 1. ListSources 失败 / 空列表
 
+完整排查（签名 / TCC 重置 / Relaunch）见 [03-macos-permissions.md](./03-macos-permissions.md)。短清单：
+
 - 隐私设置里未勾选本应用的屏幕录制  
 - 跑的是裸二进制而不是带 Bundle ID 的 `.app`  
-- 改完签名后权限条目失效，重新打开开关  
+- **adhoc** 重建后权限条目失效；改用 Apple Development 后需重置再授一次  
+- 授权后未真正退出（托盘还在）——用 Relaunch 或 `pkill` 后再开  
+
+```bash
+tccutil reset ScreenCapture com.cyper.videoeditorwails
+pkill -f 'video-editor-wails.app/Contents/MacOS/video-editor-wails' || true
+open bin/video-editor-wails.app
+```
 
 ### 2. 能录但成片没有系统声音
 

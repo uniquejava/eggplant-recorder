@@ -53,8 +53,29 @@ func ListSources() ([]Source, error) {
 	return out, nil
 }
 
+func HasScreenAccess() bool {
+	return C.CaptureHasScreenAccess() == 1
+}
+
 func RequestAccess() bool {
 	return C.CaptureRequestAccess() == 1
+}
+
+func OpenScreenCaptureSettings() bool {
+	return C.CaptureOpenScreenCaptureSettings() == 1
+}
+
+func SourceThumbnail(sourceID, sourceKind string) string {
+	cid := C.CString(sourceID)
+	ckind := C.CString(sourceKind)
+	defer C.free(unsafe.Pointer(cid))
+	defer C.free(unsafe.Pointer(ckind))
+	cthumb := C.CaptureSourceThumbnail(cid, ckind)
+	if cthumb == nil {
+		return ""
+	}
+	defer C.free(unsafe.Pointer(cthumb))
+	return C.GoString(cthumb)
 }
 
 func Start(sourceID, sourceKind, outputPath string, systemAudio, microphone bool, excludePID int) error {
@@ -90,4 +111,22 @@ func Stop() (string, error) {
 
 func IsRecording() bool {
 	return C.CaptureIsRecording() == 1
+}
+
+func Pause() error {
+	if C.CapturePause() != 1 {
+		return errors.New("not recording")
+	}
+	return nil
+}
+
+func Resume() error {
+	if C.CaptureResume() != 1 {
+		return errors.New("not recording")
+	}
+	return nil
+}
+
+func IsPaused() bool {
+	return C.CaptureIsPaused() == 1
 }

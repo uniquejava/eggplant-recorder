@@ -10,5 +10,6 @@ export type {
     Clip,
     RecordingFailedEvent,
     RecordingFinishedEvent,
-    RecordingOptions
+    RecordingOptions,
+    RecordingStatusEvent
 } from "./models.js";

@@ -24,3 +24,16 @@ export interface RecordingOptions {
     "systemAudio": boolean;
     "microphone": boolean;
 }
+
+/**
+ * RecordingStatusEvent is emitted while a session is active (and when state changes).
+ */
+export interface RecordingStatusEvent {
+    "recording": boolean;
+    "paused": boolean;
+
+    /**
+     * seconds of recorded content (excludes pause)
+     */
+    "elapsed": number;
+}

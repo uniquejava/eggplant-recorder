@@ -5,11 +5,9 @@
 *.swp
 *~
 
-# Wails / Task
+# Wails / Task / build outputs
 .task/
 bin/
-*.app/
-!build/**/*.app/
 
 # Frontend
 frontend/dist/
@@ -27,16 +25,13 @@ coverage.out
 .env.*
 !.env.example
 
-# Mobile generated (per-machine; overlays hold absolute paths)
+# Scratch recordings (keep sources clean)
+*.mp4
+
+# Mobile / packaging generated (per-machine paths)
 build/linux/appimage/build/
 build/windows/nsis/MicrosoftEdgeWebview2Setup.exe
 build/ios/xcode/overlay.json
 build/ios/xcode/gen/
 build/android/overlay.json
 build/android/gen/
-
-# Capture / export leftovers
-*.mp4
-!docs/**/*.mp4
-tmp/
-/tmp/

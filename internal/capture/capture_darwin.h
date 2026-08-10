@@ -33,11 +33,20 @@ typedef struct {
 CaptureSourceListC CaptureListSources(void);
 void CaptureFreeSources(CaptureSourceListC list);
 
-// Returns 1 if screen recording permission appears granted.
+// Single-source PNG thumbnail (base64). Caller frees with free().
+char *CaptureSourceThumbnail(const char *source_id, const char *source_kind);
+
+// Returns 1 if screen recording permission is already granted (no UI).
+int CaptureHasScreenAccess(void);
+
+// If already granted, returns 1 without UI. Otherwise requests access
+// (may open System Settings once) and returns 1 only if granted.
 int CaptureRequestAccess(void);
 
+// Opens System Settings → Privacy → Screen Recording. Returns 1 on success.
+int CaptureOpenScreenCaptureSettings(void);
+
 // Starts recording. exclude_pid: process id to exclude from capture (0 = none).
-// Returns immediately; recording runs until CaptureStop.
 CaptureResultC CaptureStart(
     const char *source_id,
     const char *source_kind,
@@ -49,6 +58,10 @@ CaptureResultC CaptureStart(
 
 CaptureResultC CaptureStop(void);
 int CaptureIsRecording(void);
+
+int CapturePause(void);
+int CaptureResume(void);
+int CaptureIsPaused(void);
 
 void CaptureFreeResult(CaptureResultC result);
 

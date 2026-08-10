@@ -14,6 +14,7 @@ declare module "@wailsio/runtime" {
         interface CustomEvents {
             "recording:failed": main$0.RecordingFailedEvent;
             "recording:finished": main$0.RecordingFinishedEvent;
+            "recording:status": main$0.RecordingStatusEvent;
         }
     }
 }

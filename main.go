@@ -13,6 +13,7 @@ var assets embed.FS
 func init() {
 	application.RegisterEvent[RecordingFinishedEvent]("recording:finished")
 	application.RegisterEvent[RecordingFailedEvent]("recording:failed")
+	application.RegisterEvent[RecordingStatusEvent]("recording:status")
 }
 
 func main() {
@@ -29,11 +30,12 @@ func main() {
 			Middleware: mediaMiddleware(recorder.MediaDir()),
 		},
 		Mac: application.MacOptions{
-			ApplicationShouldTerminateAfterLastWindowClosed: true,
+			// Keep running when the window is closed so the menu-bar tray can control recording.
+			ApplicationShouldTerminateAfterLastWindowClosed: false,
 		},
 	})
 
-	app.Window.NewWithOptions(application.WebviewWindowOptions{
+	window := app.Window.NewWithOptions(application.WebviewWindowOptions{
 		Title:  "Video Editor Wails",
 		Width:  1100,
 		Height: 720,
@@ -44,6 +46,8 @@ func main() {
 		BackgroundColour: application.NewRGB(28, 28, 30),
 		URL:              "/",
 	})
+
+	setupTray(app, recorder, window)
 
 	if err := app.Run(); err != nil {
 		log.Fatal(err)
