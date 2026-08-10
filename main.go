@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
+	"github.com/wailsapp/wails/v3/pkg/events"
 )
 
 //go:embed all:frontend/dist
@@ -45,6 +46,13 @@ func main() {
 		},
 		BackgroundColour: application.NewRGB(28, 28, 30),
 		URL:              "/",
+	})
+
+	// Close button should hide (not destroy) so the tray can Show Window again.
+	// Matches Wails examples/systray-basic and examples/hide-window.
+	window.RegisterHook(events.Common.WindowClosing, func(e *application.WindowEvent) {
+		window.Hide()
+		e.Cancel()
 	})
 
 	setupTray(app, recorder, window)

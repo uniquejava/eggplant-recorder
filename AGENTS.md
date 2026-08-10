@@ -67,7 +67,7 @@ Agents should prefer this proxy for outbound lookups so requests are not blocked
    - Prefer testing the packaged `.app`, not a bare binary.
 3. **Never block `ListSources` on per-window screenshots** — sync `SCScreenshotManager` + semaphore on the binding thread hung/emptied the window list. List titles first; load thumbs via `GetSourceThumbnail` asynchronously (see `App.tsx`).
 4. **Pause** skips writing samples but compresses the output timeline (no freeze-frames). Elapsed time excludes paused wall time.
-5. **Tray keeps the process alive** — `ApplicationShouldTerminateAfterLastWindowClosed: false`; Quit from tray menu.
+5. **Tray keeps the process alive** — `ApplicationShouldTerminateAfterLastWindowClosed: false`; Quit from tray menu. The red close button **hides** the window (`WindowClosing` hook + `Cancel`); do not destroy it or tray **Show Window** cannot bring it back.
 6. **Export** needs `ffmpeg`/`ffprobe` on PATH (GUI apps may have a thinner PATH than Terminal).
 
 ## Product behaviour to preserve

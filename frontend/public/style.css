@@ -313,7 +313,7 @@ button, input {
   top: 4px;
   bottom: 4px;
   border-radius: 6px;
-  background: var(--accent);
+  background: rgba(255, 255, 255, 0.22);
   border: 2px solid transparent;
   cursor: ew-resize;
   /* Let pointer events bubble to the track so scrubbing works on clips. */
@@ -321,7 +321,8 @@ button, input {
 }
 
 .clip.selected {
-  border-color: #fff;
+  background: rgba(255, 255, 255, 0.34);
+  border-color: rgba(255, 255, 255, 0.85);
 }
 
 .playhead {
