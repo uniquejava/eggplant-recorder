@@ -13,9 +13,9 @@ wails3 task dev
 ## 生产构建
 
 ```bash
-wails3 build          # 产出 bin/video-editor-wails
-wails3 package        # 产出 bin/video-editor-wails.app（优先 Apple Development，否则 adhoc）
-open bin/video-editor-wails.app
+wails3 build          # 产出 bin/EggplantRecorder
+wails3 package        # 产出 bin/EggplantRecorder.app（优先 Apple Development，否则 adhoc）
+open bin/EggplantRecorder.app
 ```
 
 打包签名细节、TCC 重置、为何 adhoc 会反复要权限：见 **[03 · macOS 权限、TCC 与代码签名](./03-macos-permissions.md)**。
@@ -23,7 +23,7 @@ open bin/video-editor-wails.app
 打包后建议确认：
 
 ```bash
-codesign -dv --verbose=2 bin/video-editor-wails.app 2>&1 | grep -E 'Authority|TeamIdentifier|Signature'
+codesign -dv --verbose=2 bin/EggplantRecorder.app 2>&1 | grep -E 'Authority|TeamIdentifier|Signature'
 ```
 
 应看到 `Apple Development: …` 和 `TeamIdentifier=…`，而不是 `Signature=adhoc`。
@@ -50,9 +50,9 @@ codesign -dv --verbose=2 bin/video-editor-wails.app 2>&1 | grep -E 'Authority|Te
 - 授权后未真正退出（托盘还在）——用 Relaunch 或 `pkill` 后再开  
 
 ```bash
-tccutil reset ScreenCapture com.cyper.videoeditorwails
-pkill -f 'video-editor-wails.app/Contents/MacOS/video-editor-wails' || true
-open bin/video-editor-wails.app
+tccutil reset ScreenCapture click.yinsb.eggplantrecorder
+pkill -f 'EggplantRecorder.app/Contents/MacOS/EggplantRecorder' || true
+open bin/EggplantRecorder.app
 ```
 
 ### 2. 能录但成片没有系统声音
@@ -76,7 +76,7 @@ GUI 应用的 `PATH` 可能比终端短；若仅 Terminal 能找到 ffmpeg，可
 
 ### 5. 双击 .app 没反应
 
-检查 `CFBundleExecutable` 是否等于 `Contents/MacOS/` 下的文件名（本仓库为 `video-editor-wails`）。
+检查 `CFBundleExecutable` 是否等于 `Contents/MacOS/` 下的文件名（本仓库为 `EggplantRecorder`）。
 
 ## 建议的迭代顺序（回顾）
 

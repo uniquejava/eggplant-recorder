@@ -1,13 +1,13 @@
 [Desktop Entry]
 Version=1.0
-Name=Video Editor Wails
+Name=EggplantRecorder
 Comment=Screen recorder and video editor
 # The Exec line includes %u to pass the URL to the application
-Exec=/usr/local/bin/video_editor_wails %u
+Exec=/usr/local/bin/EggplantRecorder %u
 Terminal=false
 Type=Application
-Icon=video_editor_wails
+Icon=EggplantRecorder
 Categories=Utility;
-StartupWMClass=video_editor_wails
+StartupWMClass=EggplantRecorder
 
  

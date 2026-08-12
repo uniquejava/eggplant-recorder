@@ -4,11 +4,11 @@
         <key>CFBundlePackageType</key>
             <string>APPL</string>
         <key>CFBundleName</key>
-            <string>Video Editor Wails</string>
+            <string>EggplantRecorder</string>
         <key>CFBundleExecutable</key>
-            <string>video-editor-wails</string>
+            <string>EggplantRecorder</string>
         <key>CFBundleIdentifier</key>
-            <string>com.cyper.videoeditorwails</string>
+            <string>click.yinsb.eggplantrecorder</string>
         <key>CFBundleVersion</key>
             <string>0.1.0</string>
         <key>CFBundleGetInfoString</key>
@@ -17,8 +17,6 @@
             <string>0.1.0</string>
         <key>CFBundleIconFile</key>
             <string>icons</string>
-        <key>CFBundleIconName</key>
-            <string>appicon</string>
         <key>LSMinimumSystemVersion</key>
             <string>15.0.0</string>
         <key>NSHighResolutionCapable</key>
@@ -26,10 +24,10 @@
         <key>NSHumanReadableCopyright</key>
             <string>© 2026, Cyper</string>
         <key>NSScreenCaptureUsageDescription</key>
-            <string>Video Editor Wails needs screen recording access to capture your display and windows.</string>
+            <string>EggplantRecorder needs screen recording access to capture your display and windows.</string>
         <key>NSMicrophoneUsageDescription</key>
-            <string>Video Editor Wails needs microphone access when you enable mic recording.</string>
+            <string>EggplantRecorder needs microphone access when you enable mic recording.</string>
         <key>NSAudioCaptureUsageDescription</key>
-            <string>Video Editor Wails needs system audio capture permission to record computer sound.</string>
+            <string>EggplantRecorder needs system audio capture permission to record computer sound.</string>
     </dict>
 </plist>

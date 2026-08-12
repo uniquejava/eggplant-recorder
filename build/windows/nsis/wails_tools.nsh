@@ -11,7 +11,7 @@
     !define INFO_COMPANYNAME "Cyper"
 !endif
 !ifndef INFO_PRODUCTNAME
-    !define INFO_PRODUCTNAME "Video Editor Wails"
+    !define INFO_PRODUCTNAME "EggplantRecorder"
 !endif
 !ifndef INFO_PRODUCTVERSION
     !define INFO_PRODUCTVERSION "0.1.0"

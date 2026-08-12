@@ -5,7 +5,7 @@
 # Optional: local self-signed cert + trust it in Keychain Access (more fiddly on Sequoia).
 set -euo pipefail
 
-CERT_NAME="${CODESIGN_IDENTITY_NAME:-Video Editor Wails Dev}"
+CERT_NAME="${CODESIGN_IDENTITY_NAME:-EggplantRecorder Dev}"
 KEYCHAIN="${KEYCHAIN:-$HOME/Library/Keychains/login.keychain-db}"
 OPENSSL="${OPENSSL:-/usr/bin/openssl}"
 
@@ -27,7 +27,7 @@ Your Apple Development certificate is EXPIRED. Renew it once (free):
   2. Select your Apple ID → Manage Certificates…
   3. Click + → Apple Development
   4. Then: wails3 package
-  5. Authorize Screen Recording once for bin/video-editor-wails.app
+  5. Authorize Screen Recording once for bin/EggplantRecorder.app
 
 After that, rebuilds keep the same Team ID and usually do NOT need re-authorization.
 EOF
@@ -51,7 +51,7 @@ prompt = no
 x509_extensions = exts
 [dn]
 CN = ${CERT_NAME}
-O = Video Editor Wails Local Dev
+O = EggplantRecorder Local Dev
 [exts]
 basicConstraints = critical,CA:false
 keyUsage = critical,digitalSignature

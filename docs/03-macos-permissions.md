@@ -20,10 +20,10 @@
 
 | 项 | 值 |
 |----|-----|
-| Bundle ID | `com.cyper.videoeditorwails` |
-| 产品名 | Video Editor Wails |
-| 正式包 | `bin/video-editor-wails.app` |
-| 开发包 | `bin/video-editor-wails.dev.app`（`wails3 task run` / dev） |
+| Bundle ID | `click.yinsb.eggplantrecorder` |
+| 产品名 | EggplantRecorder |
+| 正式包 | `bin/EggplantRecorder.app` |
+| 开发包 | `bin/EggplantRecorder.dev.app`（`wails3 task run` / dev） |
 
 TCC 重置、隐私列表里的条目，都按 **Bundle ID**（再叠加上代码签名身份）识别应用。
 
@@ -41,13 +41,13 @@ TCC 重置、隐私列表里的条目，都按 **Bundle ID**（再叠加上代�
 <string>15.0.0</string>
 
 <key>NSScreenCaptureUsageDescription</key>
-<string>Video Editor Wails needs screen recording access to capture your display and windows.</string>
+<string>EggplantRecorder needs screen recording access to capture your display and windows.</string>
 
 <key>NSMicrophoneUsageDescription</key>
-<string>Video Editor Wails needs microphone access when you enable mic recording.</string>
+<string>EggplantRecorder needs microphone access when you enable mic recording.</string>
 
 <key>NSAudioCaptureUsageDescription</key>
-<string>Video Editor Wails needs system audio capture permission to record computer sound.</string>
+<string>EggplantRecorder needs system audio capture permission to record computer sound.</string>
 ```
 
 同时保证 `build/darwin/Taskfile.yml` 里：
@@ -58,9 +58,9 @@ CGO_LDFLAGS: "-mmacosx-version-min=15.0"
 MACOSX_DEPLOYMENT_TARGET: "15.0"
 ```
 
-`CFBundleExecutable` 必须等于 `Contents/MacOS/` 下的二进制名（本仓库为 `video-editor-wails`）。
+`CFBundleExecutable` 必须等于 `Contents/MacOS/` 下的二进制名（本仓库为 `EggplantRecorder`）。
 
-`build/config.yml` 的 `productIdentifier` 应与 Bundle ID 一致：`com.cyper.videoeditorwails`。
+`build/config.yml` 的 `productIdentifier` 应与 Bundle ID 一致：`click.yinsb.eggplantrecorder`。
 
 ---
 
@@ -91,19 +91,19 @@ macOS 用 **TCC** 记住「哪个 App 可以录屏 / 用麦」。对屏幕录制
 
 `wails3 package` / `task run` 会走 `scripts/sign-app.sh`：
 
-1. 若有有效的 **`Apple Development: …`** 或本地 **`Video Editor Wails Dev`** → 用稳定身份签名  
+1. 若有有效的 **`Apple Development: …`** 或本地 **`EggplantRecorder Dev`** → 用稳定身份签名  
 2. 否则 → **adhoc**（`codesign --sign -`），并打印警告
 
 查看当前 `.app` 签名：
 
 ```bash
-codesign -dv --verbose=2 bin/video-editor-wails.app 2>&1 | grep -E 'Identifier|Authority|TeamIdentifier|Signature|CDHash'
+codesign -dv --verbose=2 bin/EggplantRecorder.app 2>&1 | grep -E 'Identifier|Authority|TeamIdentifier|Signature|CDHash'
 ```
 
 期望（稳定开发签名）类似：
 
 ```text
-Identifier=com.cyper.videoeditorwails
+Identifier=click.yinsb.eggplantrecorder
 Authority=Apple Development: … (…)
 TeamIdentifier=XXXXXXXXXX
 ```
@@ -134,17 +134,17 @@ security find-identity -v -p codesigning
 
 ```bash
 wails3 package
-codesign -dv --verbose=2 bin/video-editor-wails.app 2>&1 | grep -E 'Authority|TeamIdentifier|Signature'
+codesign -dv --verbose=2 bin/EggplantRecorder.app 2>&1 | grep -E 'Authority|TeamIdentifier|Signature'
 ```
 
-之后用**同一证书**打包，一般只需给 `bin/video-editor-wails.app` **授权一次**。
+之后用**同一证书**打包，一般只需给 `bin/EggplantRecorder.app` **授权一次**。
 
 也可强制指定身份：
 
 ```bash
 CODESIGN_IDENTITY="Apple Development: Your Name (TEAMID)" wails3 package
 # 或只签已有包：
-CODESIGN_IDENTITY="Apple Development: Your Name (TEAMID)" ./scripts/sign-app.sh bin/video-editor-wails.app
+CODESIGN_IDENTITY="Apple Development: Your Name (TEAMID)" ./scripts/sign-app.sh bin/EggplantRecorder.app
 ```
 
 ### 可选：本地自签证书
@@ -153,11 +153,11 @@ CODESIGN_IDENTITY="Apple Development: Your Name (TEAMID)" ./scripts/sign-app.sh 
 ./scripts/setup-dev-codesign.sh
 ```
 
-若已有过期的 Apple Development，脚本会提示你去 Xcode 续期（优先）。若导入了本地 `Video Editor Wails Dev`，还需在 **钥匙串访问** 里把该证书的 **代码签名** 信任设为允许，直到：
+若已有过期的 Apple Development，脚本会提示你去 Xcode 续期（优先）。若导入了本地 `EggplantRecorder Dev`，还需在 **钥匙串访问** 里把该证书的 **代码签名** 信任设为允许，直到：
 
 ```bash
 security find-identity -v -p codesigning
-# 能在 Valid identities 里看到 "Video Editor Wails Dev"
+# 能在 Valid identities 里看到 "EggplantRecorder Dev"
 ```
 
 ---
@@ -169,12 +169,12 @@ security find-identity -v -p codesigning
 ```bash
 wails3 package
 # 确认不是 adhoc 后再开
-open bin/video-editor-wails.app
+open bin/EggplantRecorder.app
 ```
 
 2. 应用内点 **Grant access** / **Open Settings**，或手动：  
-   **系统设置 → 隐私与安全性 → 屏幕录制** → 勾选 **Video Editor Wails**  
-   （列表没有时：点 **+**，用 Finder 选到 `bin/video-editor-wails.app`。）
+   **系统设置 → 隐私与安全性 → 屏幕录制** → 勾选 **EggplantRecorder**  
+   （列表没有时：点 **+**，用 Finder 选到 `bin/EggplantRecorder.app`。）
 
 3. **必须真正退出再开**：本应用关窗口不会退出（菜单栏托盘还在）。用应用内 **Relaunch**，或托盘 **Quit** 后再 `open`。
 
@@ -194,17 +194,17 @@ go run ./scripts/check-screen-access
 
 ```bash
 # 只清本应用的屏幕录制（ScreenCapture）授权
-tccutil reset ScreenCapture com.cyper.videoeditorwails
+tccutil reset ScreenCapture click.yinsb.eggplantrecorder
 ```
 
 然后：
 
 ```bash
 # 确保旧进程死透（关窗口不够）
-pkill -f 'video-editor-wails.app/Contents/MacOS/video-editor-wails' || true
-pkill -f 'video-editor-wails.dev.app/Contents/MacOS/video-editor-wails' || true
+pkill -f 'EggplantRecorder.app/Contents/MacOS/EggplantRecorder' || true
+pkill -f 'EggplantRecorder.dev.app/Contents/MacOS/EggplantRecorder' || true
 
-open bin/video-editor-wails.app
+open bin/EggplantRecorder.app
 ```
 
 再走一遍「勾选 → Relaunch」。
@@ -226,18 +226,18 @@ security find-identity -v -p codesigning
 
 # —— 打包与签名 ——
 wails3 package
-./scripts/sign-app.sh bin/video-editor-wails.app
-CODESIGN_IDENTITY="Apple Development: …" ./scripts/sign-app.sh bin/video-editor-wails.app
+./scripts/sign-app.sh bin/EggplantRecorder.app
+CODESIGN_IDENTITY="Apple Development: …" ./scripts/sign-app.sh bin/EggplantRecorder.app
 
-codesign -dv --verbose=2 bin/video-editor-wails.app 2>&1
-codesign -dv --verbose=2 bin/video-editor-wails.app 2>&1 | grep -E 'Identifier|Authority|TeamIdentifier|Signature|CDHash'
+codesign -dv --verbose=2 bin/EggplantRecorder.app 2>&1
+codesign -dv --verbose=2 bin/EggplantRecorder.app 2>&1 | grep -E 'Identifier|Authority|TeamIdentifier|Signature|CDHash'
 
 # —— TCC 重置 ——
-tccutil reset ScreenCapture com.cyper.videoeditorwails
+tccutil reset ScreenCapture click.yinsb.eggplantrecorder
 
 # —— 进程 ——
-pkill -f 'video-editor-wails.app/Contents/MacOS/video-editor-wails' || true
-open bin/video-editor-wails.app
+pkill -f 'EggplantRecorder.app/Contents/MacOS/EggplantRecorder' || true
+open bin/EggplantRecorder.app
 
 # —— 权限探针（身份需已授权）——
 go run ./scripts/check-screen-access
@@ -267,11 +267,11 @@ go run ./scripts/check-screen-access
 
 ### 空列表 / Record 灰掉
 
-1. 是否在跑 **`.app`**（不要只跑裸 `bin/video-editor-wails`）。  
+1. 是否在跑 **`.app`**（不要只跑裸 `bin/EggplantRecorder`）。  
 2. 隐私里是否勾了**当前这个** `.app`（dev 与正式可能是两条）。  
 3. 签名是否为 Apple Development（非 adhoc）。  
 4. 授权后是否 **Relaunch / 托盘 Quit**。  
-5. 仍不行：`tccutil reset ScreenCapture com.cyper.videoeditorwails` 后重授。
+5. 仍不行：`tccutil reset ScreenCapture click.yinsb.eggplantrecorder` 后重授。
 
 ### 勾选已开，开关「没法设置」
 

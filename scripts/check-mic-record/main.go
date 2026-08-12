@@ -15,7 +15,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/uniquejava/video-editor-wails/internal/capture"
+	"github.com/uniquejava/eggplant-recorder/internal/capture"
 )
 
 func runCase(name, sourceID, sourceKind, dir string, systemAudio, mic bool) {

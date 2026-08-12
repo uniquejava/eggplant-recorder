@@ -12,12 +12,12 @@
 
 ```bash
 wails3 init \
-  -n "Video Editor Wails" \
+  -n "EggplantRecorder" \
   -t react \
-  -mod github.com/uniquejava/video-editor-wails \
+  -mod github.com/uniquejava/eggplant-recorder \
   -d . \
-  -productname "Video Editor Wails" \
-  -productidentifier com.cyper.videoeditorwails
+  -productname "EggplantRecorder" \
+  -productidentifier click.yinsb.eggplantrecorder
 ```
 
 说明：

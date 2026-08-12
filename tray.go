@@ -37,7 +37,7 @@ func setupTray(app *application.App, recorder *RecorderService, window *applicat
 	tray := app.SystemTray.New()
 	tray.SetTemplateIcon(trayIdleIcon)
 	tray.SetLabel("Idle")
-	tray.SetTooltip("Video Editor Wails")
+	tray.SetTooltip("EggplantRecorder")
 	tc.tray = tray
 
 	tc.rebuildMenu(RecordingStatusEvent{})
@@ -66,7 +66,7 @@ func (t *TrayController) applyStatus(ev RecordingStatusEvent) {
 	case !ev.Recording:
 		t.tray.SetTemplateIcon(trayIdleIcon)
 		t.tray.SetLabel("Idle")
-		t.tray.SetTooltip("Video Editor Wails")
+		t.tray.SetTooltip("EggplantRecorder")
 	case ev.Paused:
 		t.tray.SetTemplateIcon(trayPausedIcon)
 		label := fmt.Sprintf("⏸ %s", formatElapsed(ev.Elapsed))

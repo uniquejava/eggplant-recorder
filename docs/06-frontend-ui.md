@@ -53,7 +53,7 @@ await RecorderService.StopRecording()
 ## 去掉模板噪音
 
 - `index.html` 去掉全屏背景图层，只留 `#root`  
-- 标题改为 `Video Editor Wails`  
+- 标题改为 `EggplantRecorder`  
 - 删除示例 `GreetService` 相关代码  
 
 ## 开发热重载

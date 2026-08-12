@@ -21,7 +21,7 @@ func main() {
 	recorder := NewRecorderService()
 
 	app := application.New(application.Options{
-		Name:        "Video Editor Wails",
+		Name:        "EggplantRecorder",
 		Description: "Screen recorder and video editor for macOS 15+",
 		Services: []application.Service{
 			application.NewService(recorder),
@@ -37,7 +37,7 @@ func main() {
 	})
 
 	window := app.Window.NewWithOptions(application.WebviewWindowOptions{
-		Title:  "Video Editor Wails",
+		Title:  "EggplantRecorder",
 		Width:  1100,
 		Height: 720,
 		Mac: application.MacWindow{

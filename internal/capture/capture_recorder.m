@@ -30,7 +30,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _queue = dispatch_queue_create("com.cyper.videoeditor.capture", DISPATCH_QUEUE_SERIAL);
+        _queue = dispatch_queue_create("click.yinsb.eggplantrecorder.capture", DISPATCH_QUEUE_SERIAL);
         _sessionAnchor = kCMTimeInvalid;
         _pausedAccumulated = kCMTimeZero;
         _pauseBeganAt = kCMTimeInvalid;

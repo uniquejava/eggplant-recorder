@@ -16,7 +16,7 @@ pick_identity() {
     name="$(printf '%s\n' "$line" | sed -n 's/.*"\(.*\)".*/\1/p')"
     [ -z "$name" ] && continue
     case "$name" in
-      "Video Editor Wails Dev"|"Apple Development:"*|Developer\ ID\ Application:*)
+      "EggplantRecorder Dev"|"Apple Development:"*|Developer\ ID\ Application:*)
         printf '%s\n' "$name"
         return
         ;;

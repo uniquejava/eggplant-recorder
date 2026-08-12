@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/uniquejava/video-editor-wails/internal/capture"
+	"github.com/uniquejava/eggplant-recorder/internal/capture"
 )
 
 func main() {

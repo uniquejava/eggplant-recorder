@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/uniquejava/video-editor-wails/internal/capture"
+	"github.com/uniquejava/eggplant-recorder/internal/capture"
 	"github.com/wailsapp/wails/v3/pkg/application"
 )
 
@@ -65,7 +65,7 @@ type RecorderService struct {
 }
 
 func NewRecorderService() *RecorderService {
-	dir := filepath.Join(os.TempDir(), "video-editor-wails")
+	dir := filepath.Join(os.TempDir(), "EggplantRecorder")
 	_ = os.MkdirAll(dir, 0o755)
 	return &RecorderService{mediaDir: dir}
 }

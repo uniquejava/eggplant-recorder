@@ -1,6 +1,8 @@
-# Video Editor Wails
+# EggplantRecorder
 
 macOS 15+ screen recorder and light video editor, built with **Wails v3** (React + TypeScript frontend, Go + ScreenCaptureKit backend).
+
+Repo: [github.com/uniquejava/eggplant-recorder](https://github.com/uniquejava/eggplant-recorder) · Bundle ID: `click.yinsb.eggplantrecorder`
 
 ![screenshot](./docs/screenshot.png)
 
@@ -22,7 +24,7 @@ macOS 15+ screen recorder and light video editor, built with **Wails v3** (React
 ```bash
 wails3 task dev
 # or
-wails3 build && open bin/video-editor-wails.app
+wails3 build && open bin/EggplantRecorder.app
 ```
 
 On first launch, grant **Screen Recording** (and **Microphone** / system audio if enabled) in System Settings → Privacy & Security.

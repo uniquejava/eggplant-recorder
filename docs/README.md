@@ -23,11 +23,12 @@
 | 6 | [06-frontend-ui.md](./06-frontend-ui.md) | 三态 UI：选源 / 录制中 / 剪辑 |
 | 7 | [07-export-timeline.md](./07-export-timeline.md) | 时间线与导出 |
 | 8 | [08-build-run.md](./08-build-run.md) | 开发、打包、排错 |
+| — | [app-icon.md](./app-icon.md) | Dock 图标：深色底 + classic `.icns`（非 Fred 紫底） |
 
 ## 仓库地图（对照代码）
 
 ```
-video-editor-wails/
+EggplantRecorder/
 ├── main.go                 # 应用入口、窗口、中间件
 ├── recorderservice.go      # 前端可调用的录屏服务
 ├── internal/capture/       # ObjC ScreenCaptureKit 桥

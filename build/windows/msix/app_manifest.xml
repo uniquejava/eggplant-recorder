@@ -8,13 +8,13 @@
   IgnorableNamespaces="uap3">
   
   <Identity 
-    Name="com.cyper.videoeditorwails"
+    Name="click.yinsb.eggplantrecorder"
     Publisher="CN=Cyper"
     Version="0.1.0.0" 
     ProcessorArchitecture="arm64" />
   
   <Properties>
-    <DisplayName>Video Editor Wails</DisplayName>
+    <DisplayName>EggplantRecorder</DisplayName>
     <PublisherDisplayName>Cyper</PublisherDisplayName>
     <Description>Screen recorder and video editor</Description>
     <Logo>Assets\StoreLogo.png</Logo>
@@ -29,9 +29,9 @@
   </Resources>
   
   <Applications>
-    <Application Id="com.cyper.videoeditorwails" Executable="video_editor_wails" EntryPoint="Windows.FullTrustApplication">
+    <Application Id="click.yinsb.eggplantrecorder" Executable="EggplantRecorder" EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements
-        DisplayName="Video Editor Wails"
+        DisplayName="EggplantRecorder"
         Description="Screen recorder and video editor"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
@@ -41,7 +41,7 @@
       </uap:VisualElements>
       
       <Extensions>
-        <desktop:Extension Category="windows.fullTrustProcess" Executable="video_editor_wails" />
+        <desktop:Extension Category="windows.fullTrustProcess" Executable="EggplantRecorder" />
         
         
       </Extensions>

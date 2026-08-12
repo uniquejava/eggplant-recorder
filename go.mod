@@ -1,4 +1,4 @@
-module github.com/uniquejava/video-editor-wails
+module github.com/uniquejava/eggplant-recorder
 
 go 1.25.0
 

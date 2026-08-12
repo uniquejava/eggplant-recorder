@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Events } from '@wailsio/runtime'
-import { RecorderService } from '../bindings/github.com/uniquejava/video-editor-wails'
-import type { MicDevice, Source } from '../bindings/github.com/uniquejava/video-editor-wails/internal/capture/models'
-import type { Clip } from '../bindings/github.com/uniquejava/video-editor-wails/models'
+import { RecorderService } from '../bindings/github.com/uniquejava/eggplant-recorder'
+import type { MicDevice, Source } from '../bindings/github.com/uniquejava/eggplant-recorder/internal/capture/models'
+import type { Clip } from '../bindings/github.com/uniquejava/eggplant-recorder/models'
 
 type View = 'select' | 'recording' | 'editor'
 
@@ -405,7 +405,7 @@ function App() {
                 <p>
                   macOS blocks the window list until this app is allowed under
                   System Settings → Privacy &amp; Security → Screen Recording.
-                  Enable <strong>Video Editor Wails</strong>, then relaunch.
+                  Enable <strong>EggplantRecorder</strong>, then relaunch.
                   Tip: use a stable code signature (<code>./scripts/setup-dev-codesign.sh</code>)
                   so rebuilds do not require authorizing again.
                 </p>

@@ -8,13 +8,13 @@
         AllowPromptForPassword="false">
     </Settings>
     <Installer
-        Path="video_editor_wails"
+        Path="EggplantRecorder"
         Arguments=""
-        InstallLocation="C:\Program Files\Cyper\Video Editor Wails">
+        InstallLocation="C:\Program Files\Cyper\EggplantRecorder">
     </Installer>
     <PackageInformation
-        PackageName="Video Editor Wails"
-        PackageDisplayName="Video Editor Wails"
+        PackageName="EggplantRecorder"
+        PackageDisplayName="EggplantRecorder"
         PublisherName="CN=Cyper"
         PublisherDisplayName="Cyper"
         Version="0.1.0.0"
@@ -25,10 +25,10 @@
         </Capabilities>
         <Applications>
             <Application
-                Id="com.cyper.videoeditorwails"
+                Id="click.yinsb.eggplantrecorder"
                 Description="Screen recorder and video editor"
-                DisplayName="Video Editor Wails"
-                ExecutableName="video_editor_wails"
+                DisplayName="EggplantRecorder"
+                ExecutableName="EggplantRecorder"
                 EntryPoint="Windows.FullTrustApplication">
                 
             </Application>
@@ -41,13 +41,13 @@
         </Dependencies>
         <Properties>
             <Framework>false</Framework>
-            <DisplayName>Video Editor Wails</DisplayName>
+            <DisplayName>EggplantRecorder</DisplayName>
             <PublisherDisplayName>Cyper</PublisherDisplayName>
             <Description>Screen recorder and video editor</Description>
             <Logo>Assets\AppIcon.png</Logo>
         </Properties>
     </PackageInformation>
-    <SaveLocation PackagePath="video_editor_wails.msix" />
+    <SaveLocation PackagePath="EggplantRecorder.msix" />
     <PackageIntegrity>
         <CertificatePath></CertificatePath>
     </PackageIntegrity>

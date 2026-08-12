@@ -6,8 +6,8 @@ version: '3'
 # This information is used to generate the build assets.
 info:
   companyName: "Cyper"
-  productName: "Video Editor Wails"
-  productIdentifier: "com.cyper.videoeditorwails"
+  productName: "EggplantRecorder"
+  productIdentifier: "click.yinsb.eggplantrecorder"
   description: "Screen recorder and video editor"
   copyright: "© 2026, Cyper"
   comments: "macOS 15+ screen recorder built with Wails v3"

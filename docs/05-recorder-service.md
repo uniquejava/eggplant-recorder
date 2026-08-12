@@ -12,7 +12,7 @@
 recorder := NewRecorderService()
 
 app := application.New(application.Options{
-    Name: "Video Editor Wails",
+    Name: "EggplantRecorder",
     Services: []application.Service{
         application.NewService(recorder),
     },
@@ -58,7 +58,7 @@ Events.On('recording:finished', (ev) => { /* ev.data */ })
 录制文件写到：
 
 ```text
-$TMPDIR/video-editor-wails/rec-<nanosecond>.mp4
+$TMPDIR/EggplantRecorder/rec-<nanosecond>.mp4
 ```
 
 前端不能直接读任意磁盘路径，因此加 **Asset Middleware**：请求 `/media/<filename>` 时从该目录 `ServeFile`。
@@ -77,8 +77,8 @@ wails3 generate bindings -ts -i ./...
 前端引用：
 
 ```ts
-import { RecorderService } from '../bindings/github.com/uniquejava/video-editor-wails'
-import type { Source } from '../bindings/github.com/uniquejava/video-editor-wails/internal/capture/models'
+import { RecorderService } from '../bindings/github.com/uniquejava/eggplant-recorder'
+import type { Source } from '../bindings/github.com/uniquejava/eggplant-recorder/internal/capture/models'
 ```
 
 ## `StartRecording` 流程

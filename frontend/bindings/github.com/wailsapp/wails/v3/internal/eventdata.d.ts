@@ -7,7 +7,7 @@ import type { Events } from "@wailsio/runtime";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore: Unused imports
-import type * as main$0 from "../../../../uniquejava/video-editor-wails/models.js";
+import type * as main$0 from "../../../../uniquejava/eggplant-recorder/models.js";
 
 declare module "@wailsio/runtime" {
     namespace Events {

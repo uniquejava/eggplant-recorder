@@ -1,9 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="100%" height="100%" viewBox="0 0 583 533" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
-    <g transform="matrix(1,0,0,1,-246,-251)">
-        <g id="Ebene1">
-            <path d="M246,251L265,784L401,784L506,450L507,450L505,784L641,784L829,251L682,251L596,567L595,567L596,251L478,251L378,568L391,251L246,251Z"/>
-        </g>
-    </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <radialGradient id="bg" cx="40%" cy="36%" r="80%">
+      <stop offset="0%" stop-color="#26282E"/>
+      <stop offset="55%" stop-color="#16171B"/>
+      <stop offset="100%" stop-color="#0A0B0E"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <rect x="184" y="205" width="656" height="471" rx="56" fill="#ECEEF2"/>
+  <rect x="246" y="276" width="532" height="317" rx="31" fill="#121318"/>
+  <circle cx="512" cy="435" r="92" fill="#E63E3E"/>
+  <rect x="482" y="665" width="60" height="120" fill="#C6CAD2"/>
+  <ellipse cx="512" cy="820" rx="184" ry="41" fill="#ECEEF2"/>
 </svg>
