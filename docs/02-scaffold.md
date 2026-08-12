@@ -28,7 +28,7 @@ wails3 init \
 | `-mod` | Go module path |
 | `-productidentifier` | Bundle ID，后面权限与签名都靠它 |
 
-若 CLI 在子目录里生成了 `Video_Editor_Wails/`，把文件挪到仓库根即可。
+若 CLI 在子目录里生成了 `EggplantRecorder/`，把文件挪到仓库根即可。
 
 ## 默认长什么样
 

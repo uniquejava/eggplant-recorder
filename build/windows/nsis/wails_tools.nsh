@@ -5,7 +5,7 @@
 !include "FileFunc.nsh"
 
 !ifndef INFO_PROJECTNAME
-    !define INFO_PROJECTNAME "Video_Editor_Wails"
+    !define INFO_PROJECTNAME "EggplantRecorder"
 !endif
 !ifndef INFO_COMPANYNAME
     !define INFO_COMPANYNAME "Cyper"

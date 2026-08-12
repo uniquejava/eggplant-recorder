@@ -17,7 +17,7 @@ Step-by-step tutorial (Chinese): `docs/README.md`.
 | Go module | `github.com/uniquejava/eggplant-recorder` |
 | Bundle ID | `click.yinsb.eggplantrecorder` |
 | GitHub | `https://github.com/uniquejava/eggplant-recorder` |
-| Local path | `/Users/cyper/code/golang-projects/EggplantRecorder` |
+| Local path | `/Users/cyper/code/eggplant-projects/EggplantRecorder` |
 
 Formerly `video-editor-wails` / `com.cyper.videoeditorwails`. Do **not** revive those names.
 
