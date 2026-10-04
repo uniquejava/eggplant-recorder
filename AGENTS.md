@@ -23,14 +23,19 @@ Formerly `video-editor-wails` / `com.cyper.videoeditorwails`. Do **not** revive 
 
 ## Session continuity / WIP
 
-PascalCase artifacts + local folder are **done**. Go module / GitHub stay kebab-case (`eggplant-recorder`). Changes may still be **uncommitted** — commit only if the user asks.
+**Direction change (2026-08):** product is moving to a **native SwiftUI** rewrite (menu-bar-first, OMI-like). Do **not** keep expanding the Wails UI.
+
+Canonical requirements for the rewrite: **[`docs/swiftui-rewrite.md`](docs/swiftui-rewrite.md)**.
+
+Wails tree remains a **behaviour / capture reference** (`internal/capture`, pause semantics, ffmpeg export). Prefer starting the Xcode app per that doc (same Bundle ID `click.yinsb.eggplantrecorder`).
 
 When the user reopens this folder after ending a Cursor session, pick up here:
 
-1. Confirm workspace is `…/EggplantRecorder` (not `eggplant-recorder` or old `video-editor-wails`).
-2. If they want a commit: stage the rename diff; use author alias `usegmail` when they ask for that.
-3. Prefer packaged app: `bin/EggplantRecorder.app` / `/Applications/EggplantRecorder.app`. New Bundle ID already set — authorize Screen Recording for this app if needed.
-4. Dev codesign cert name is `EggplantRecorder Dev` (`scripts/setup-dev-codesign.sh` / `sign-app.sh`).
+1. Read `docs/swiftui-rewrite.md` first.
+2. Confirm workspace is `…/EggplantRecorder` (not old `video-editor-wails`).
+3. Sibling UI reference: `../EggplantFred` (MenuBarExtra, template icon rules in `EggplantFred/docs/menu-bar-icon.md`).
+4. Commit only if asked (`usegmail` alias when they want that author).
+5. Legacy packaged Wails app: `bin/EggplantRecorder.app` — Screen Recording TCC still applies if testing the old binary.
 
 ## Stack
 
@@ -114,3 +119,19 @@ Agents should prefer this proxy for outbound lookups so requests are not blocked
 - Small, focused diffs; match existing style
 - Wails v3 Service + `application.RegisterEvent` / `Events.On` patterns already in the repo
 - Keep privacy usage strings in both `Info.plist` and `Info.dev.plist`
+
+## Agent skills
+
+Matt Pocock engineering skills (`/to-spec`, `/to-tickets`, `/implement`, `/wayfinder`, `/grill-with-docs`, `/tdd`, `/code-review`, …) are installed globally; this repo is configured for them as follows.
+
+### Issue tracker
+
+Local markdown under `.scratch/<feature-slug>/`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default role strings (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: root `GLOSSARY.md` + `docs/adr/`. See `docs/agents/domain.md`.
